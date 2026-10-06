@@ -68,6 +68,34 @@ class TaskController extends ChangeNotifier {
   //TODO: resetar o estado
 
   //TODO: remover tarefa
+  void removeTask(int index) {
+    // estado
+    isSuccess = false;
+    errorMessage = '';
+
+    //carregando
+    isLoading = true;
+    notifyListeners();
+
+    // tentativa de remoão de uma tarefa - contempla o Delete
+    try {
+      lstTasks.removeAt(index);
+
+      isLoading = false;
+      isSuccess = true;
+      notifyListeners();
+    } catch (e, s) {
+      log(
+        'Erro ao remover tarefa',
+        error: e,
+        stackTrace: s,
+        name: 'TaskController',
+      );
+      errorMessage = "Erro ao remover tarefa. Por favor, tente novamente.";
+      isLoading = false;
+      notifyListeners();
+    }
+  }
 
   //TODO: marcar como concluída
 }

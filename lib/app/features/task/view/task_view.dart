@@ -24,58 +24,62 @@ class _TaskViewState extends State<TaskView> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: controller.lstTasks.length,
-          itemBuilder: (context, index) {
-            return Card(
-              shadowColor: Colors.lightBlue,
-              elevation: 4,
-              child: ListTile(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        controller.lstTasks[index].title,
-                        overflow: TextOverflow.ellipsis,
+        child: ListenableBuilder(
+          listenable: controller,
+          builder: (_, _) => ListView.builder(
+            itemCount: controller.lstTasks.length,
+            itemBuilder: (context, index) {
+              return Card(
+                shadowColor: Colors.lightBlue,
+                elevation: 4,
+                child: ListTile(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          controller.lstTasks[index].title,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.arrow_forward),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => TaskDetailView(
-                              task: controller.lstTasks[index],
+                      IconButton(
+                        icon: Icon(Icons.arrow_forward),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => TaskDetailView(
+                                taskController: controller,
+                                index: index,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                subtitle: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        'Descrição: ${controller.lstTasks[index].description}',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                          );
+                        },
                       ),
-                    ),
-                    Flexible(
-                      child: Text(
-                        'Vencimento: ${DateFormat('dd/MM/yyyy').format(controller.lstTasks[index].dueDate)}',
-                        overflow: TextOverflow.ellipsis, //dd/MM/yyyy
+                    ],
+                  ),
+                  subtitle: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          'Descrição: ${controller.lstTasks[index].description}',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
                       ),
-                    ),
-                  ],
+                      Flexible(
+                        child: Text(
+                          'Vencimento: ${DateFormat('dd/MM/yyyy').format(controller.lstTasks[index].dueDate)}',
+                          overflow: TextOverflow.ellipsis, //dd/MM/yyyy
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

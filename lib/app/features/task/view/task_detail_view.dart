@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lista_tarefas/app/features/task/models/task_model.dart';
+import 'package:lista_tarefas/app/features/task/controllers/task_controller.dart';
 
 class TaskDetailView extends StatelessWidget {
-  final TaskModel task;
-  const TaskDetailView({super.key, required this.task});
+  final TaskController taskController;
+  final int index;
+  const TaskDetailView({
+    super.key,
+    required this.taskController,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +38,33 @@ class TaskDetailView extends StatelessWidget {
           IconButton(
             padding: EdgeInsets.all(0),
             tooltip: 'Excluir Tarefa',
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (dialogContext) {
+                  return AlertDialog(
+                    title: Text('Excluir Tarefa'),
+                    content: Text(
+                      'Tem certeza que deseja excluir esta tarefa?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(dialogContext),
+                        child: Text('Cancelar'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          taskController.removeTask(index);
+                          Navigator.pop(dialogContext);
+                          Navigator.pop(context);
+                        },
+                        child: Text('Excluir'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
             icon: Icon(Icons.delete, color: Colors.red),
           ),
         ],
@@ -49,22 +80,26 @@ class TaskDetailView extends StatelessWidget {
                 'Título',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Text(task.title),
+              Text(taskController.lstTasks[index].title),
               Text(
                 'Descrição',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Text(task.description),
+              Text(taskController.lstTasks[index].description),
               Text(
                 'Categoria',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Text(task.category),
+              Text(taskController.lstTasks[index].category),
               Text(
                 'Data de vencimento',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Text(DateFormat('dd/MM/yyyy').format(task.dueDate)),
+              Text(
+                DateFormat(
+                  'dd/MM/yyyy',
+                ).format(taskController.lstTasks[index].dueDate),
+              ),
             ],
           ),
         ),
