@@ -83,47 +83,67 @@ class TaskDetailView extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            spacing: 8,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Título',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        child: ListenableBuilder(
+          listenable: taskController,
+          builder: (context, _) {
+            if (taskController.isLoading == true) {
+              return Center(child: CircularProgressIndicator.adaptive());
+            }
+            return SingleChildScrollView(
+              child: Column(
+                spacing: 8,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Título',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(taskController.lstTasks[index].title),
+                  Text(
+                    'Descrição',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(taskController.lstTasks[index].description),
+                  Text(
+                    'Categoria',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(taskController.lstTasks[index].category),
+                  Text(
+                    'Data de vencimento',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    DateFormat(
+                      'dd/MM/yyyy',
+                    ).format(taskController.lstTasks[index].dueDate),
+                  ),
+                  Text(
+                    'Status: ${taskController.lstTasks[index].isDone ? "Concluída" : "Pendente"}',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 50),
+                ],
               ),
-              Text(taskController.lstTasks[index].title),
-              Text(
-                'Descrição',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Text(taskController.lstTasks[index].description),
-              Text(
-                'Categoria',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Text(taskController.lstTasks[index].category),
-              Text(
-                'Data de vencimento',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                DateFormat(
-                  'dd/MM/yyyy',
-                ).format(taskController.lstTasks[index].dueDate),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        label: Text(
-          'Concluir tarefa',
-          style: TextStyle(color: Colors.white, fontSize: 16),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await taskController.markAsDone(index);
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Tarefa concluída com sucesso'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
+        },
         backgroundColor: Colors.green,
-        icon: const Icon(Icons.check, color: Colors.white),
+        child: Icon(Icons.check, color: Colors.white),
       ),
     );
   }

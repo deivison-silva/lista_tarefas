@@ -67,7 +67,6 @@ class TaskController extends ChangeNotifier {
 
   //TODO: resetar o estado
 
-  //TODO: remover tarefa
   //Future: Indica que é uma operaão futura
   Future<void> removeTask(int index) async {
     // estado
@@ -100,4 +99,21 @@ class TaskController extends ChangeNotifier {
   }
 
   //TODO: marcar como concluída
+  Future<void> markAsDone(int index) async {
+    // estado
+    isSuccess = false;
+    errorMessage = '';
+
+    //carregando
+    isLoading = true;
+    notifyListeners();
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    lstTasks[index].isDone = true;
+
+    isLoading = false;
+    isSuccess = true;
+    notifyListeners();
+  }
 }

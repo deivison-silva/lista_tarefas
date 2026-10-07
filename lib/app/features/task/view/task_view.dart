@@ -30,7 +30,9 @@ class _TaskViewState extends State<TaskView> {
             itemCount: controller.lstTasks.length,
             itemBuilder: (context, index) {
               return Card(
-                shadowColor: Colors.lightBlue,
+                color: controller.lstTasks[index].isDone == true
+                    ? Colors.green.shade200
+                    : Colors.blue.shade200,
                 elevation: 4,
                 child: ListTile(
                   title: Row(
