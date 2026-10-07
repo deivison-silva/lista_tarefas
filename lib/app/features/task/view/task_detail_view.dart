@@ -42,25 +42,37 @@ class TaskDetailView extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (dialogContext) {
-                  return AlertDialog(
-                    title: Text('Excluir Tarefa'),
-                    content: Text(
-                      'Tem certeza que deseja excluir esta tarefa?',
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(dialogContext),
-                        child: Text('Cancelar'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          taskController.removeTask(index);
-                          Navigator.pop(dialogContext);
-                          Navigator.pop(context);
-                        },
-                        child: Text('Excluir'),
-                      ),
-                    ],
+                  return ListenableBuilder(
+                    listenable: taskController,
+                    builder: (context, _) {
+                      if (taskController.isLoading == true) {
+                        return Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        );
+                      }
+                      return AlertDialog(
+                        title: Text('Excluir Tarefa'),
+                        content: Text(
+                          'Tem certeza que deseja excluir esta tarefa?',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(dialogContext),
+                            child: Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              await taskController.removeTask(index);
+                              if (context.mounted) {
+                                Navigator.pop(dialogContext);
+                                Navigator.pop(context, true);
+                              }
+                            },
+                            child: Text('Excluir'),
+                          ),
+                        ],
+                      );
+                    },
                   );
                 },
               );

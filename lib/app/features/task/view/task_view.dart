@@ -45,14 +45,30 @@ class _TaskViewState extends State<TaskView> {
                       IconButton(
                         icon: Icon(Icons.arrow_forward),
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => TaskDetailView(
-                                taskController: controller,
-                                index: index,
-                              ),
-                            ),
-                          );
+                          Navigator.of(context)
+                              .push(
+                                MaterialPageRoute(
+                                  builder: (context) => TaskDetailView(
+                                    taskController: controller,
+                                    index: index,
+                                  ),
+                                ),
+                              )
+                              .then((value) {
+                                if (value == true) {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Tarefa excluída com sucesso',
+                                        ),
+                                        backgroundColor: Colors.green,
+                                        duration: Duration(seconds: 4),
+                                      ),
+                                    );
+                                  }
+                                }
+                              });
                         },
                       ),
                     ],

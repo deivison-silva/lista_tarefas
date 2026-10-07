@@ -68,7 +68,8 @@ class TaskController extends ChangeNotifier {
   //TODO: resetar o estado
 
   //TODO: remover tarefa
-  void removeTask(int index) {
+  //Future: Indica que é uma operaão futura
+  Future<void> removeTask(int index) async {
     // estado
     isSuccess = false;
     errorMessage = '';
@@ -77,6 +78,7 @@ class TaskController extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
+    await Future.delayed(const Duration(seconds: 2));
     // tentativa de remoão de uma tarefa - contempla o Delete
     try {
       lstTasks.removeAt(index);
