@@ -4,31 +4,15 @@ import 'package:lista_tarefas/app/features/task/models/task_model.dart';
 
 class TaskController extends ChangeNotifier {
   // construir nossa lista de tarefas
-  var lstTasks = <TaskModel>[
-    TaskModel(
-      id: 1,
-      title: "Estudar Flutter",
-      description:
-          "Estudar Flutter descrição alkhsdkljahslkjdhalksjdhlakjsdklshdlkjashlkdjahskljdahlksjdhaklsjdhlkajsdhlkajshdklajshdlkjashldkjashlkdjashlkdjahslkdjahslkjdahlskjdahlksjdhaskljhk alkhsdkljahslkjdhalksjdhlakjsdklshdlkjashlkdjahskljdahlksjdhaklsjdhlkajsdhlkajshdklajshdlkjashldkjashlkdjashlkdjahslkdjahslkjdahlskjdahlksjdhaskljhk alkhsdkljahslkjdhalksjdhlakjsdklshdlkjashlkdjahskljdahlksjdhaklsjdhlkajsdhlkajshdklajshdlkjashldkjashlkdjashlkdjahslkdjahslkjdahlskjdahlksjdhaskljhk alkhsdkljahslkjdhalksjdhlakjsdklshdlkjashlkdjahskljdahlksjdhaklsjdhlkajsdhlkajshdklajshdlkjashldkjashlkdjashlkdjahslkdjahslkjdahlskjdahlksjdhaskljhk alkhsdkljahslkjdhalksjdhlakjsdklshdlkjashlkdjahskljdahlksjdhaklsjdhlkajsdhlkajshdklajshdlkjashldkjashlkdjashlkdjahslkdjahslkjdahlskjdahlksjdhaskljhkalkhsdkljahslkjdhalksjdhlakjsdklshdlkjashlkdjahskljdahlksjdhaklsjdhlkajsdhlkajshdklajshdlkjashldkjashlkdjashlkdjahslkdjahslkjdahlskjdahlksjdhaskljhk",
-      category: "Estudo",
-      dueDate: DateTime(2026, 10, 1),
-    ),
-    TaskModel(
-      id: 2,
-      title: "Estudar Dart",
-      description:
-          "Estudar Dart descrição alkhsdkljahslkjdhalksjdhlakjsdklshdlkjashlkdjahskljdahlksjdhaklsjdhlkajsdhlkajshdklajshdlkjashldkjashlkdjashlkdjahslkdjahslkjdahlskjdahlksjdhaskljhk",
-      category: "Estudo",
-      dueDate: DateTime(2026, 10, 2),
-    ),
-  ]; // não possui elementos
+  var lstTasks = <TaskModel>[]; // não possui elementos
 
   var isLoading = false;
   var isSuccess = false;
   var errorMessage = '';
 
+  //TODO: Transformar addTask em Future<void> e adicionar delay (simulação de API) como nas demais funções
   //adicionar tarefa
-  void addTask(TaskModel task) {
+  Future<void> addTask(TaskModel task) async {
     isSuccess = false;
     errorMessage = '';
 
@@ -36,7 +20,7 @@ class TaskController extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    //manipulação de dados
+    await Future.delayed(const Duration(seconds: 2));
     //tentativa de inserção?
     try {
       lstTasks.add(
