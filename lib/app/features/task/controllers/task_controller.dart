@@ -49,6 +49,48 @@ class TaskController extends ChangeNotifier {
     }
   }
 
+  //TODO: implementar método updateTask para editar uma tarefa existente
+  Future<void> updateTask(int index, TaskModel task) async {
+    // estado
+    isSuccess = false;
+    errorMessage = '';
+
+    //carregando
+    isLoading = true;
+    notifyListeners();
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    //tentativa de atualização?
+    try {
+      if (index == -1) {
+        throw Exception('Tarefa não encontrada.');
+      }
+
+      lstTasks[index] = TaskModel(
+        id: task.id,
+        title: task.title,
+        description: task.description,
+        category: task.category,
+        dueDate: task.dueDate,
+      );
+
+      isLoading = false;
+      isSuccess = true;
+      notifyListeners();
+    } catch (e, s) {
+      log(
+        'Erro ao atualizar tarefa',
+        error: e,
+        stackTrace: s,
+        name: 'TaskController',
+      );
+      errorMessage = "Erro ao atualizar tarefa. Por favor, tente novamente.";
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
   //TODO: resetar o estado
 
   //Future: Indica que é uma operaão futura

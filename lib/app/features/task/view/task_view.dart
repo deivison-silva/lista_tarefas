@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:lista_tarefas/app/features/task/controllers/task_controller.dart';
 import 'package:lista_tarefas/app/features/task/models/task_model.dart';
 import 'package:lista_tarefas/app/features/task/view/task_detail_view.dart';
+import 'package:lista_tarefas/app/features/task/widgets/custom_text_form_field.dart';
 
 class TaskView extends StatefulWidget {
   const TaskView({super.key});
@@ -14,11 +15,20 @@ class TaskView extends StatefulWidget {
 class _TaskViewState extends State<TaskView> {
   final controller = TaskController();
 
+  //Adicionar tarefa
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final categoryController = TextEditingController();
   final dueDateController = TextEditingController();
+
+  //Atualizar tarefa
+  final titleControllerUpdate = TextEditingController();
+  final descriptionControllerUpdate = TextEditingController();
+  final categoryControllerUpdate = TextEditingController();
+  final dueDateControllerUpdate = TextEditingController();
+
   final formKey = GlobalKey<FormState>();
+  final formKeyUpdate = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -26,6 +36,10 @@ class _TaskViewState extends State<TaskView> {
     descriptionController.dispose();
     categoryController.dispose();
     dueDateController.dispose();
+    titleControllerUpdate.dispose();
+    descriptionControllerUpdate.dispose();
+    categoryControllerUpdate.dispose();
+    dueDateControllerUpdate.dispose();
     super.dispose();
   }
 
@@ -103,6 +117,167 @@ class _TaskViewState extends State<TaskView> {
                           },
                         ),
                       ],
+                    ),
+                    trailing: IconButton(
+                      onPressed: () {
+                        final titulo = controller.lstTasks[index].title;
+                        final descricao =
+                            controller.lstTasks[index].description;
+                        final categoria = controller.lstTasks[index].category;
+                        final dueDate = controller.lstTasks[index].dueDate;
+
+                        titleControllerUpdate.text = titulo;
+                        descriptionControllerUpdate.text = descricao;
+                        categoryControllerUpdate.text = categoria;
+                        dueDateControllerUpdate.text = dueDate.toString();
+
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ListenableBuilder(
+                              listenable: controller,
+                              builder: (context, _) {
+                                if (controller.isLoading == true) {
+                                  return const Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  );
+                                }
+
+                                return AlertDialog(
+                                  title: Text('Atualizar Tarefa'),
+                                  content: SizedBox(
+                                    height: 300,
+                                    child: Form(
+                                      key: formKeyUpdate,
+                                      child: ListView(
+                                        children: [
+                                          TextFormField(
+                                            controller: titleControllerUpdate,
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return 'Titulo é obrigatório';
+                                              }
+                                              return null;
+                                            },
+                                            decoration: InputDecoration(
+                                              label: Text('Titulo'),
+                                            ),
+                                          ),
+                                          TextFormField(
+                                            controller:
+                                                descriptionControllerUpdate,
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return 'Descrição é obrigatório';
+                                              }
+                                              return null;
+                                            },
+                                            decoration: InputDecoration(
+                                              label: Text('Descrição'),
+                                            ),
+                                          ),
+                                          CustomTextFormField(
+                                            controller:
+                                                categoryControllerUpdate,
+                                            labelText: 'Categoria',
+                                          ),
+                                          TextFormField(
+                                            controller:
+                                                categoryControllerUpdate,
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return 'Categoria é obrigatória';
+                                              }
+                                              return null;
+                                            },
+                                            decoration: InputDecoration(
+                                              label: Text('Categoria'),
+                                            ),
+                                          ),
+                                          TextFormField(
+                                            controller: dueDateControllerUpdate,
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return 'Data de vencimento é obrigatória';
+                                              }
+                                              return null;
+                                            },
+                                            decoration: InputDecoration(
+                                              label: Text('Data de Vencimento'),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Cancelar'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        if (formKeyUpdate.currentState!
+                                            .validate()) {
+                                          await controller.updateTask(
+                                            index,
+                                            TaskModel(
+                                              id: 1,
+                                              title: titleControllerUpdate.text,
+                                              description:
+                                                  descriptionControllerUpdate
+                                                      .text,
+                                              category:
+                                                  categoryControllerUpdate.text,
+                                              dueDate: DateTime.parse(
+                                                dueDateControllerUpdate.text,
+                                              ),
+                                            ),
+                                          );
+                                          if (context.mounted) {
+                                            Navigator.of(context).pop();
+                                          }
+
+                                          if (controller.isSuccess == true) {
+                                            if (context.mounted) {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'Tarefa atualizada com sucesso',
+                                                  ),
+                                                  backgroundColor: Colors.green,
+                                                  duration: Duration(
+                                                    seconds: 4,
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          }
+
+                                          titleControllerUpdate.clear();
+                                          descriptionControllerUpdate.clear();
+                                          categoryControllerUpdate.clear();
+                                          dueDateControllerUpdate.clear();
+                                        }
+                                      },
+                                      child: Text('Atualizar'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                      icon: Icon(Icons.edit),
                     ),
                     subtitle: Column(
                       mainAxisSize: MainAxisSize.min,

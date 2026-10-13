@@ -27,13 +27,13 @@ class TaskDetailView extends StatelessWidget {
         ),
         actionsPadding: const EdgeInsets.all(0),
         actions: [
-          //botão de editar
-          IconButton(
-            padding: EdgeInsets.all(0),
-            tooltip: 'Editar tarefa',
-            onPressed: () {},
-            icon: Icon(Icons.edit_rounded, color: Colors.orange),
-          ),
+          // //botão de editar
+          // IconButton(
+          //   padding: EdgeInsets.all(0),
+          //   tooltip: 'Editar tarefa',
+          //   onPressed: () {},
+          //   icon: Icon(Icons.edit_rounded, color: Colors.orange),
+          // ),
           //botão de apagar
           IconButton(
             padding: EdgeInsets.all(0),
