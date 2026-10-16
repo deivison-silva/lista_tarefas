@@ -5,7 +5,12 @@ import 'package:lista_tarefas/app/features/task/widgets/custom_text_form_field.d
 
 class CustomDialogAddTask extends StatefulWidget {
   final TaskController controller;
-  const CustomDialogAddTask({super.key, required this.controller});
+  final BuildContext context;
+  const CustomDialogAddTask({
+    super.key,
+    required this.controller,
+    required this.context,
+  });
 
   @override
   State<CustomDialogAddTask> createState() => _CustomDialogAddTaskState();
@@ -22,6 +27,11 @@ class _CustomDialogAddTaskState extends State<CustomDialogAddTask> {
 
   @override
   void dispose() {
+    titleController.clear();
+    descriptionController.clear();
+    categoryController.clear();
+    dueDateController.clear();
+
     titleController.dispose();
     descriptionController.dispose();
     categoryController.dispose();
@@ -81,13 +91,13 @@ class _CustomDialogAddTaskState extends State<CustomDialogAddTask> {
                   dueDate: DateTime.parse(dueDateController.text),
                 ),
               );
-              if (context.mounted) {
-                Navigator.of(context).pop();
+              if (widget.context.mounted) {
+                Navigator.of(widget.context).pop();
               }
 
               if (widget.controller.isSuccess == true) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                if (widget.context.mounted) {
+                  ScaffoldMessenger.of(widget.context).showSnackBar(
                     SnackBar(
                       content: Text('Tarefa adicionada com sucesso'),
                       backgroundColor: Colors.green,
@@ -96,11 +106,6 @@ class _CustomDialogAddTaskState extends State<CustomDialogAddTask> {
                   );
                 }
               }
-
-              titleController.clear();
-              descriptionController.clear();
-              categoryController.clear();
-              dueDateController.clear();
             }
           },
           child: Text('Salvar'),

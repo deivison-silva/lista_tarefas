@@ -5,11 +5,13 @@ import 'package:lista_tarefas/app/features/task/widgets/custom_text_form_field.d
 
 class CustomDialogUpdateTask extends StatefulWidget {
   final TaskController controller;
+  final BuildContext context;
   final int index;
   const CustomDialogUpdateTask({
     super.key,
     required this.controller,
     required this.index,
+    required this.context,
   });
 
   @override
@@ -40,6 +42,11 @@ class _CustomDialogUpdateTaskState extends State<CustomDialogUpdateTask> {
 
   @override
   void dispose() {
+    titleControllerUpdate.clear();
+    descriptionControllerUpdate.clear();
+    categoryControllerUpdate.clear();
+    dueDateControllerUpdate.clear();
+
     titleControllerUpdate.dispose();
     descriptionControllerUpdate.dispose();
     categoryControllerUpdate.dispose();
@@ -100,13 +107,13 @@ class _CustomDialogUpdateTaskState extends State<CustomDialogUpdateTask> {
                   dueDate: DateTime.parse(dueDateControllerUpdate.text),
                 ),
               );
-              if (context.mounted) {
-                Navigator.of(context).pop();
+              if (widget.context.mounted) {
+                Navigator.of(widget.context).pop();
               }
 
               if (widget.controller.isSuccess == true) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                if (widget.context.mounted) {
+                  ScaffoldMessenger.of(widget.context).showSnackBar(
                     SnackBar(
                       content: Text('Tarefa atualizada com sucesso'),
                       backgroundColor: Colors.green,
@@ -115,11 +122,6 @@ class _CustomDialogUpdateTaskState extends State<CustomDialogUpdateTask> {
                   );
                 }
               }
-
-              titleControllerUpdate.clear();
-              descriptionControllerUpdate.clear();
-              categoryControllerUpdate.clear();
-              dueDateControllerUpdate.clear();
             }
           },
           child: Text('Atualizar'),

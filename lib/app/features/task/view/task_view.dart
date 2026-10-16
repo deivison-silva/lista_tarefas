@@ -106,6 +106,7 @@ class _TaskViewState extends State<TaskView> {
 
                                 return CustomDialogUpdateTask(
                                   controller: controller,
+                                  context: context,
                                   index: index,
                                 );
                               },
@@ -155,7 +156,10 @@ class _TaskViewState extends State<TaskView> {
                       child: CircularProgressIndicator.adaptive(),
                     );
                   }
-                  return CustomDialogAddTask(controller: controller);
+                  return CustomDialogAddTask(
+                    context: context, //passa contexto do showDialog linha 148
+                    controller: controller,
+                  );
                 },
               );
             },
